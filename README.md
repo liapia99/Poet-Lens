@@ -10,11 +10,16 @@ We followed the same instructions that are in the original poetry camera github 
 ## Software Steps
 
 ### Part 1. Check that your Raspberry Pi & camera works
-1. Connect your Raspberry Pi to your Camera module. We used a different camera, such as the cable that came with the recommended camera, and the extra strips were too big on one side. You need the same size for both ends with the Pi. Here is the camera we used: 
+1. Connect your Raspberry Pi to your Camera module. We used a different camera, such as the cable that came with the recommended camera, and the extra strips were too big on one side. You need the same size for both ends with the Pi. Here is the camera we used:
 
-2. Insert your SD card with a fresh install of any Raspberry Pi OS onto the Pi. You can follow steps here to do that: https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/2. 
+   To test your camera, use this command:
+``` shell
+raspistill -o testshot.jpg
+```
 
-3. Connect your Pi to a monitor via mini HDMI.
+3. Insert your SD card with a fresh install of any Raspberry Pi OS onto the Pi. You can follow steps here to do that: https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/2. 
+
+4. Connect your Pi to a monitor via mini HDMI.
 
 5. Plug in power. You should see a green light on the Pi, and a start-up screen on the monitor.
   
@@ -65,7 +70,7 @@ $ git clone https://github.com/carolynz/poetry-camera-rpi.git
 $ stty -F /dev/serial0 9600
 $ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
 ```
-  We got a permission denied error. If that happens just use this command:
+  We got a permission denied error. If that happens, just use this command:
 
   ```shell
 $ sudo chmod 666 /dev/serial0
