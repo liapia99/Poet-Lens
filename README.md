@@ -1,7 +1,7 @@
 # Poetry Camera
 A camera that prints poems of what it sees.
 
-Forked from the [poetry camera](https://poetry.camera/)by Ryan Mather and Kelin Carolyn Zhang. 
+Forked from the [poetry camera ](https://poetry.camera/)by Ryan Mather and Kelin Carolyn Zhang. 
 
 I worked with Richard Errico, a high-school teacher interested in photography and electronics. He thought this was a very cool project, so he wanted to make his own. 
 
