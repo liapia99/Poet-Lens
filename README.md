@@ -112,7 +112,12 @@ printer = Adafruit_Thermal('/dev/serial0', 19200, timeout=5)
 [TODO] include wiring diagram
 
 1. Connect buttons
-
+```shell
+$ pip install replicate
+$ pip install python-dotenv
+$ pip install openai
+sk-proj-oBtFtyJNZjbIESXY46q0T3BlbkFJ0B3apt56ttYWFzl3jKyU
+```
 2. Run the poetry camera script.
 ```shell
 $ python main.py
