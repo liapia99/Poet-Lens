@@ -75,8 +75,9 @@ $ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
   ```shell
 $ sudo chmod 666 /dev/serial0
 ```
+You have to do this everythime you start power up your Pi. 
 
-  Our baud rate was different than the Adafruit and original github so just test 19200 and 9600 to see which one gives you an output on the printer. 
+  Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. 
 
 
 
@@ -116,7 +117,6 @@ printer = Adafruit_Thermal('/dev/serial0', 19200, timeout=5)
 $ pip install replicate
 $ pip install python-dotenv
 $ pip install openai
-sk-proj-oBtFtyJNZjbIESXY46q0T3BlbkFJ0B3apt56ttYWFzl3jKyU
 ```
 2. Run the poetry camera script.
 ```shell
