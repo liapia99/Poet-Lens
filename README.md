@@ -101,7 +101,7 @@ printer = Adafruit_Thermal('/dev/serial0', 9600, timeout=2)
 2. Navigate to your directory with the Poetry Camera code and create a `.env` file, which will store sensitive details like your OpenAI API key. We named ours:
 ```nano .env```
 
-Create an OpenAI key. Since we were beginners, we had to figure out how to do this. Richard has a paid account with OpenAI, so we just had to go to the Billing page and click Add payment details. You need to pay for using an API key outside of the OPENAI playground. We just did $5. 
+Create an OpenAI key. Since we were beginners with API keys, we had to figure out how to do this. Richard has a paid account with OpenAI, so we just had to go to the Billing page and click Add payment details. You need to pay for using an API key outside of the OPENAI playground. We just did $5. 
 
 Our Pi was pretty slow when we opened the web browser, so we ended up doing everything on a separate computer. For the API keys, copy them and paste them into a Word or Notepad document. I also recommend changing the font to Courier New so that you can see the differences between the '0' or 'O' and 'I' or 'l'. 
 
