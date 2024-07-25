@@ -43,7 +43,7 @@ Use this tutorial to test the camera: (https://www.dummies.com/article/technolog
 1. Update the system and install requirements. I'm not sure you even need all of these; I can go over these again later and trim out the unnecessary ones.
 ```shell
 $ sudo apt-get update
-$ sudo apt-get install git cups build-essential libcups2-dev libcupsimage2-dev python3-serial python-pil python-unidecode
+$ sudo apt-get install git cups build-essential libcups2-dev libcupsimage2-dev python3-serial python-pil python3-unidecode
 ```
 
 2. Install some software required to make the Adafruit Thermal Printer work.
@@ -75,7 +75,7 @@ $ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
   ```shell
 $ sudo chmod 666 /dev/serial0
 ```
-You have to do this everythime you start power up your Pi. 
+You have to do this every time you power up your Pi. 
 
   Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. 
 
@@ -92,25 +92,42 @@ $ cd poetry-camera-rpi
 # main.py:
 
 # instantiate printer
-printer = Adafruit_Thermal('/dev/serial0', 19200, timeout=5)
+printer = Adafruit_Thermal('/dev/serial0', 9600, timeout=2)
 ```
 
-[TODO] need a setup script to test that the printer works
-
 ### Part 3. Set up the AI
-1. Set up an OpenAI account and create an API key.
+1. Set up an OpenAI account and a Replicate account as you will need to create two API keys. When we ended up going through the original steps it, we kept getting and Error code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
 
-2. Navigate to your directory with the Poetry Camera code and create a `.env` file, which will store sensitive details like your OpenAI API key:
+2. Navigate to your directory with the Poetry Camera code and create a `.env` file, which will store sensitive details like your OpenAI API key. We named ours:
 ```nano .env```
 
-3. In the .env, add your API key:
+Create an OpenAI key. Since we were beginners, we had to figure out how to do this. Richard has a paid account with OpenAI, so we just had to go to the Billing page and click Add payment details. You need to pay for using an API key outside of the OPENAI playground. We just did $5. 
+
+Our Pi was pretty slow when we opened the web browser, so we ended up doing everything on a separate computer. For the API keys, copy them and paste them into a Word or Notepad document. I also recommend changing the font to Courier New so that you can see the differences between the '0' or 'O' and 'I' or 'l'. 
+
+Create a Replicate token at https://replicate.com/account/api-tokens
+
+
+3. In the .env, add your API key and token:
 ```OPENAI_API_KEY=pasteyourAPIkeyhere```
+```REPLICATE_API_TOKEN=pasteyourAPIkeyhere```
 
-[TODO] add an openai test script
+In the terminal, we had to store it as an environment variable instead of hard-coding it into the script. This is how we did it: 
+```shell
+$ export OPENAI_API_KEY=your_api_key_here
+$ export REPLICATE_API_TOKEN=your_api_token_here
+$ curl https://api.replicate.com/v1/account -H "Authorization: Bearer $REPLICATE_API_TOKEN"
+```
+The curl command should, if the previous steps are done correctly, connectes to your Replicate API account and print out your GitHub name, handle and your GitHub URL. 
 
+These following commands should spit back out your API key and token.
+
+```shell
+$ echo "$REPLICATE_API_TOKEN"
+$ echo "$OPENAI_API_KEY"
+```
 
 ### Part 4. Get it working end-to-end
-[TODO] include wiring diagram
 
 1. Connect buttons
 ```shell
