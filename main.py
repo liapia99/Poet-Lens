@@ -16,8 +16,8 @@ from openai import OpenAI
 
 #load API keys from .env
 load_dotenv()
-openai_client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-REPLICATE_API_TOKEN = os.environ['REPLICATE_API_TOKEN']
+openai_client = OpenAI(api_key=os.getenv['OPENAI_API_KEY'])
+REPLICATE_API_TOKEN = os.getenv['REPLICATE_API_TOKEN']
 
 #instantiate printer
 baud_rate = 9600 # REPLACE WITH YOUR OWN BAUD RATE
@@ -27,7 +27,7 @@ printer = Adafruit_Thermal('/dev/serial0', baud_rate, timeout=5)
 picam2 = Picamera2()
 # start camera
 picam2.start()
-time.sleep(2) # warmup period since first few frames are often poor quality
+time.sleep(5) # warmup period since first few frames are often poor quality
 
 #instantiate buttons
 shutter_button = Button(16) # REPLACE WTH YOUR OWN BUTTON PINS
@@ -58,7 +58,7 @@ def take_photo_and_print_poem():
   led.blink()
 
   # Take photo & save it
-  metadata = picam2.capture_file('/home/carolynz/CamTest/images/image.jpg')
+  metadata = picam2.capture_file(home_directory + "image.jpg")
 
   # FOR DEBUGGING: print metadata
   #print(metadata)
@@ -78,7 +78,7 @@ def take_photo_and_print_poem():
   image_caption = replicate.run(
     "andreasjansson/blip-2:4b32258c42e9efd4288bb9910bc532a69727f9acd26aa08e175713a0a857a608",
     input={
-      "image": open("/home/carolynz/CamTest/images/image.jpg", "rb"),
+      "image": open(home_directory + "image.jpg", "rb"),
       "caption": True,
     })
 
@@ -146,7 +146,7 @@ def generate_prompt(image_description):
 
 def print_poem(poem):
   # wrap text to 32 characters per line (max width of receipt printer)
-  printable_poem = wrap_text(poem, 32)
+  printable_poem = wrap_text(poem, 42)
 
   printer.justify('L') # left align poem text
   printer.println(printable_poem)
