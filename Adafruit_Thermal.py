@@ -58,7 +58,7 @@ class Adafruit_Thermal(Serial):
 		# NEW BEHAVIOR: if no parameters given, output is written
 		# to stdout, to be piped through 'lp -o raw' (old behavior
 		# was to use default port & baud rate).
-		baudrate = 19200
+		baudrate = 9600
 		if len(args) == 0:
 			self.writeToStdout = True
 		if len(args) == 1:
