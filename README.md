@@ -26,6 +26,7 @@ raspistill -o testshot.jpg
 7. Once the Pi is on, open up the Terminal on your Pi to start making changes.
 
 8. Set up Raspberry Pi hardware to take Camera & Serial inputs:
+   
 ```shell
 sudo raspi-config
 ```
@@ -33,7 +34,6 @@ sudo raspi-config
 9. You'll want to adjust the following settings:
     - Glamor: ON (for Camera setup on newer versions of Raspbian OS)
     - Serial Port ON (lets you access receipt printer inputs)
-    - Serial Console OFF (idk what this does)
 
     Restart the system as needed.
    
