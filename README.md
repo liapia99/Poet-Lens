@@ -40,13 +40,13 @@ sudo raspi-config
 Use this tutorial to test the camera: (https://www.dummies.com/article/technology/computers/hardware/raspberry-pi/test-raspberry-pi-camera-module-246246/)
 
 ### Part 2. Check that your printer works
-1. Update the system and install requirements. I'm not sure you even need all of these; I can go over these again later and trim out the unnecessary ones.
+1. Update the system and install requirements. 
 ```shell
 $ sudo apt-get update
 $ sudo apt-get install git cups build-essential libcups2-dev libcupsimage2-dev python3-serial python-pil python3-unidecode
 ```
 
-2. Install some software required to make the Adafruit Thermal Printer work.
+2. Install some software required to make the Adafruit Thermal Printer work. This works even with other thermal printers. 
 ```shell
 $ cd
 $ git clone https://github.com/adafruit/zj-58
@@ -58,7 +58,7 @@ $ sudo ./install
 3. Clone this repo, which contains our Poetry Camera software:
 ```shell
 $ cd
-$ git clone https://github.com/carolynz/poetry-camera-rpi.git
+$ git clone https://github.com/liapia99/poetry-camera.git
 ```
 
 4. Set up your thermal printer, connecting it to power and your Pi. Both the the TTL and power should be connected to the Pi and batteries. ![image](https://github.com/user-attachments/assets/c6d9a1e5-1b92-40f5-8cd7-383cb450049a)
@@ -75,16 +75,16 @@ $ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
   ```shell
 $ sudo chmod 666 /dev/serial0
 ```
-You have to do this every time you power up your Pi. 
+You have to do this every time you power up your Pi. However this should not be needed if the setup is done correctly. 
 
-  Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. 
+  Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. We had 9600. 
 
 
 
   
 6. Open our `poetry-camera-rpi` directory:
 ```shell
-$ cd poetry-camera-rpi
+$ cd poetry-camera
 ```
 
 6. *If* your printer's baud rate is different from `19200`, open `main.py` and replace that number with your own printer's baud rate:
@@ -105,7 +105,7 @@ Create an OpenAI key. Since we were beginners with API keys, we had to figure ou
 
 Our Pi was pretty slow when we opened the web browser, so we ended up doing everything on a separate computer. For the API keys, copy them and paste them into a Word or Notepad document. I also recommend changing the font to Courier New so that you can see the differences between the '0' or 'O' and 'I' or 'l'. 
 
-Create a Replicate token at https://replicate.com/account/api-tokens
+Create a Replicate token at https://replicate.com/account/api-tokens. I just used the Default token given. 
 
 
 3. In the .env, add your API key and token:
@@ -118,9 +118,9 @@ $ export OPENAI_API_KEY=your_api_key_here
 $ export REPLICATE_API_TOKEN=your_api_token_here
 $ curl https://api.replicate.com/v1/account -H "Authorization: Bearer $REPLICATE_API_TOKEN"
 ```
-The curl command should, if the previous steps are done correctly, connectes to your Replicate API account and print out your GitHub name, handle and your GitHub URL. 
+The curl command should, if the previous steps are done correctly, connect to your Replicate API account and print out your GitHub name, handle, and your GitHub URL. 
 
-These following commands should spit back out your API key and token.
+The following commands should spit back out your API key and token.
 
 ```shell
 $ echo "$REPLICATE_API_TOKEN"
@@ -135,16 +135,20 @@ $ pip install replicate
 $ pip install python-dotenv
 $ pip install openai
 ```
-2. Run the poetry camera script.
+2. Run the poetry camera script. You should already be in the poetry-camera folder but if not:
+   ```shell
+$ cd poetry-camera
+```
+
 ```shell
 $ python main.py
 ```
 
-3. Check that the shutter button lights up, indicating that the camera is ready to take a picture
+3. Check that the shutter button lights up, indicating that the camera is ready to take a picture. We did a separate LED and two buttons, but you can use the button that the original project suggested. 
 
 4. Click the shutter button and wait for the poem to print out.
 
-[TODO] troubleshooting instructions different common error messages
+
 
 ## Part 5. Automatically run the Poetry Camera code when the camera turns on
 
