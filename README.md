@@ -164,6 +164,8 @@ $ crontab -e
 ```
 On the left side of the terminal, our command line starts with ```stemguy@raspberrypi```. Anything in front of the ```@``` sign should replace ```stemguy``` in the command line above. Normally, it is just ```pi```. 
 
+Press Ctrl and X and then Shift Y to make the changes. Enter. 
+
 - Reboot the system for this to take effect
 ```shell
 sudo reboot
