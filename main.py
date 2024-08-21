@@ -13,11 +13,22 @@ from wraptext import *
 from datetime import datetime
 from dotenv import load_dotenv
 from openai import OpenAI
+import openai
 
 #load API keys from .env
-load_dotenv()
-openai_client = OpenAI(api_key=os.getenv['OPENAI_API_KEY'])
-REPLICATE_API_TOKEN = os.getenv['REPLICATE_API_TOKEN']
+load_dotenv() # this is the line you would change ex. load_dotenv('nano.env')
+
+#These will print the API keys before the caption but not on the poem paper. 
+print(os.getenv("OPENAI_API_KEY"))
+print(os.getenv("REPLICATE_API_TOKEN"))
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
+replicate_api_token = os.getenv("REPLICATE_API_TOKEN")
+
+OpenAI.api_key =openai_api_key
+replicate_client = replicate.Client(api_token=replicate_api_token)
+
+openai_client = openai.OpenAI(api_key=openai_api_key)
 
 #instantiate printer
 baud_rate = 9600 # REPLACE WITH YOUR OWN BAUD RATE
@@ -76,7 +87,7 @@ def take_photo_and_print_poem():
   #########################
 
   image_caption = replicate.run(
-    "andreasjansson/blip-2:4b32258c42e9efd4288bb9910bc532a69727f9acd26aa08e175713a0a857a608",
+    "andreasjansson/blip-2:f677695e5e89f8b236e52ecd1d3f01beb44c34606419bcc19345e046d8f786f9",
     input={
       "image": open(home_directory + "image.jpg", "rb"),
       "caption": True,
