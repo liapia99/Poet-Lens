@@ -32,8 +32,8 @@ sudo raspi-config
 ```
 
 9. You'll want to adjust the following settings:
-    - Glamor: ON (for Camera setup on newer versions of Raspbian OS)
-    - Serial Port ON (lets you access receipt printer inputs)
+    - 6. Advanced Options -> Glamor -> On
+    - 3. Interface Options -> Serial Port -> No -> Yes
 
     Restart the system as needed.
    
@@ -72,12 +72,12 @@ $ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
 ```
   We got a permission denied error. If that happens, just use this command:
 
-  ```shell
+```shell
 $ sudo chmod 666 /dev/serial0
 ```
 You have to do this every time you power up your Pi. However this should not be needed if the setup is done correctly. 
 
-  Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. We had 9600. 
+Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. We had 9600. 
 
 
 
@@ -96,16 +96,16 @@ printer = Adafruit_Thermal('/dev/serial0', 9600, timeout=2)
 ```
 
 ### Part 3. Set up the AI
-1. Set up an OpenAI account and a Replicate account as you will need to create two API keys. When we ended up going through the original steps it, we kept getting and Error code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
+1. Set up an OpenAI account and a Replicate account, as you will need to create two API keys. When we ended up going through the original steps it, we kept getting and Error code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
 
 2. Navigate to your directory with the Poetry Camera code and create a `.env` file, which will store sensitive details like your OpenAI API key. We named ours:
-```.env```. If you give it a name like ```nano.env``` you will have to change this in the main.py. 
+```.env```. If you give it a name like ```nano.env``` you must change this in the main.py. 
 
 Create an OpenAI key. Since we were beginners with API keys, we had to figure out how to do this. Richard has a paid account with OpenAI, so we just had to go to the Billing page and click Add payment details. You need to pay for using an API key outside of the OPENAI playground. We just did $5. 
 
 Our Pi was pretty slow when we opened the web browser, so we ended up doing everything on a separate computer. For the API keys, copy them and paste them into a Word or Notepad document. I also recommend changing the font to Courier New so that you can see the differences between the '0' or 'O' and 'I' or 'l'. 
 
-Create a Replicate token at https://replicate.com/account/api-tokens. I just used the Default token given. 
+Create a Replicate token at https://replicate.com/account/api-tokens. I just used the Default token given. We also had to pay to use the API model that creates the poem. For that, when you search for the blip-2 API model or go here: https://replicate.com/andreasjansson/blip-2, on the bottom left, in yellow, there should be a pop-up that prompts you to add billing details. It is not bad, though; for example, for this API, it costs $1 to run it 714 times. You can set a limit for each month. 
 
 
 3. In the .env, add your API key and token:
