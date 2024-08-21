@@ -99,7 +99,7 @@ printer = Adafruit_Thermal('/dev/serial0', 9600, timeout=2)
 1. Set up an OpenAI account and a Replicate account as you will need to create two API keys. When we ended up going through the original steps it, we kept getting and Error code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
 
 2. Navigate to your directory with the Poetry Camera code and create a `.env` file, which will store sensitive details like your OpenAI API key. We named ours:
-```nano .env```
+```.env```. If you give it a name like ```nano.env``` you will have to change this in the main.py. 
 
 Create an OpenAI key. Since we were beginners with API keys, we had to figure out how to do this. Richard has a paid account with OpenAI, so we just had to go to the Billing page and click Add payment details. You need to pay for using an API key outside of the OPENAI playground. We just did $5. 
 
@@ -136,7 +136,8 @@ $ pip install python-dotenv
 $ pip install openai
 ```
 2. Run the poetry camera script. You should already be in the poetry-camera folder but if not:
-   ```shell
+   
+```shell
 $ cd poetry-camera
 ```
 
@@ -149,7 +150,6 @@ $ python main.py
 4. Click the shutter button and wait for the poem to print out.
 
 
-
 ## Part 5. Automatically run the Poetry Camera code when the camera turns on
 
 1. Set up a `cron` job to run your python script at startup. First, open your `crontab` file to your default editor:
@@ -160,16 +160,17 @@ $ crontab -e
 2 Then add the following line to your `crontab`, to run the script when you boot up the computer.
 ```shell
 # Run poetry camera script at start
-@reboot python /home/pi/poetry-camera-rpi/main.py >> /home/pi/poetry-camera-rpi/errors.txt 2>&1
+@reboot /usr/bin/python3 /home/stemguy/poetry-camera/main.py
 ```
-The `>> {...}errors.txt 2>&1` writes any error messages to `errors.txt` for debugging. A common failure mode is files cannot be found. Make sure that all your filepaths are absolute filepaths and have the right usernames and directory names.
+On the left side of the terminal, our command line starts with ```stemguy@raspberrypi```. Anything in front of the ```@``` sign should replace ```stemguy``` in the command line above. Normally, it is just ```pi```. 
 
 - Reboot the system for this to take effect
 ```shell
 sudo reboot
 ```
-Now reboot your camera and wait for the LED light to turn on!
+Now reboot your camera. Once the green built-in LED on the Pi turns solid then you can press the shutter button.
 
+A common problem that we had was that camera was failing. For that we just rebooted the camera by unplug and plugging back in the batteries. 
 
 ## Part 6. Make the power circuit
 [TODO] clean this up & explain steps :)
