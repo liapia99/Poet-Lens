@@ -1,4 +1,4 @@
-# Poetry Camera
+# Poet's Lens
 A camera that prints poems of what it sees.
 
 Forked from the [poetry camera ](https://poetry.camera/)by Ryan Mather and Kelin Carolyn Zhang. 
@@ -10,7 +10,7 @@ We followed the same instructions that are in the original poetry camera github 
 ## Software Steps
 
 ### Part 1. Check that your Raspberry Pi & camera works
-1. Connect your Raspberry Pi to your Camera module. We used a different camera, such as the cable that came with the recommended camera, and the extra strips were too big on one side. You need the same size for both ends with the Pi. Here is the camera we used:
+1. Connect your Raspberry Pi to your Camera module. We used a different camera, such as the cable that came with the recommended camera, and the extra strips were too big on one side. You need the same size for both ends with the Pi. Here is the camera we used: https://www.raspberrypi.com/products/camera-module-3/ 
 
    To test your camera, use this command:
 ``` shell
@@ -35,11 +35,12 @@ sudo raspi-config
     - 6. Advanced Options -> Glamor -> On
     - 3. Interface Options -> Serial Port -> No -> Yes
 
-    Restart the system as needed.
+    Restart the system as needed. You can either put in the command to restart or just unplug the power and then wait a few seconds before reconnecting power.
    
+### Part 2. Check that your camera works
 Use this tutorial to test the camera: (https://www.dummies.com/article/technology/computers/hardware/raspberry-pi/test-raspberry-pi-camera-module-246246/)
 
-### Part 2. Check that your printer works
+### Part 3. Check that your printer works
 1. Update the system and install requirements. 
 ```shell
 $ sudo apt-get update
@@ -58,7 +59,7 @@ $ sudo ./install
 3. Clone this repo, which contains our Poetry Camera software:
 ```shell
 $ cd
-$ git clone https://github.com/liapia99/poetry-camera.git
+$ git clone https://github.com/liapia99/Poet-Lens.git
 ```
 
 4. Set up your thermal printer, connecting it to power and your Pi. Both the the TTL and power should be connected to the Pi and batteries. ![image](https://github.com/user-attachments/assets/c6d9a1e5-1b92-40f5-8cd7-383cb450049a)
@@ -75,16 +76,13 @@ $ echo -e "This is a test.\\n\\n\\n" > /dev/serial0
 ```shell
 $ sudo chmod 666 /dev/serial0
 ```
-You have to do this every time you power up your Pi. However this should not be needed if the setup is done correctly. 
+You have to do this every time you power up your Pi. However, this should not be needed if the setup is done correctly. 
 
 Our baud rate was different than the Adafruit and original GitHub, so just test 19200 and 9600 to see which one gives you an output on the printer. We had 9600. 
 
-
-
-  
-6. Open our `poetry-camera-rpi` directory:
+6. Open our `Poet-Lens` directory:
 ```shell
-$ cd poetry-camera
+$ cd Poet-Lens
 ```
 
 6. *If* your printer's baud rate is different from `19200`, open `main.py` and replace that number with your own printer's baud rate:
@@ -95,8 +93,8 @@ $ cd poetry-camera
 printer = Adafruit_Thermal('/dev/serial0', 9600, timeout=2)
 ```
 
-### Part 3. Set up the AI
-1. Set up an OpenAI account and a Replicate account, as you will need to create two API keys. When we ended up going through the original steps it, we kept getting and Error code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
+### Part 4. Set up the AI
+1. Set up an OpenAI account and a Replicate account, as you will need to create two API keys. When we went through the original steps, we kept getting and Error Code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
 
 2. Navigate to your directory with the Poetry Camera code and create a `.env` file, which will store sensitive details like your OpenAI API key. We named ours:
 ```.env```. If you give it a name like ```nano.env``` you must change this in the main.py. 
@@ -127,7 +125,7 @@ $ echo "$REPLICATE_API_TOKEN"
 $ echo "$OPENAI_API_KEY"
 ```
 
-### Part 4. Get it working end-to-end
+### Part 5. Get it working end-to-end
 
 1. Connect buttons
 ```shell
@@ -138,19 +136,19 @@ $ pip install openai
 2. Run the poetry camera script. You should already be in the poetry-camera folder but if not:
    
 ```shell
-$ cd poetry-camera
+$ cd Poet-Lens
 ```
 
 ```shell
 $ python main.py
 ```
 
-3. Check that the shutter button lights up, indicating that the camera is ready to take a picture. We did a separate LED and two buttons, but you can use the button that the original project suggested. 
+3. Check that the light on the Pi does not flash quickly. We did a separate LED and two buttons, but you can use the button that the original project suggested. 
 
 4. Click the shutter button and wait for the poem to print out.
 
 
-## Part 5. Automatically run the Poetry Camera code when the camera turns on
+## Part 6. Automatically run the Poetry Camera code when the camera turns on
 
 1. Set up a `cron` job to run your python script at startup. First, open your `crontab` file to your default editor:
 ```shell
@@ -160,7 +158,7 @@ $ crontab -e
 2 Then add the following line to your `crontab`, to run the script when you boot up the computer.
 ```shell
 # Run poetry camera script at start
-@reboot /usr/bin/python3 /home/stemguy/poetry-camera/main.py
+@reboot /usr/bin/python3 /home/stemguy/Poet-Lens/main.py
 ```
 On the left side of the terminal, our command line starts with ```stemguy@raspberrypi```. Anything in front of the ```@``` sign should replace ```stemguy``` in the command line above. Normally, it is just ```pi```. 
 
@@ -172,14 +170,13 @@ sudo reboot
 ```
 Now reboot your camera. Once the green built-in LED on the Pi turns solid then you can press the shutter button.
 
-A common problem that we had was that camera was failing. For that we just rebooted the camera by unplug and plugging back in the batteries. 
+A common problem that we had was that camera was failing. For that, we just rebooted the camera by unplugging and plugging back in the batteries. 
 
-## Part 6. Make the power circuit
-[TODO] clean this up & explain steps :)
+## Part 7. Make the power circuit
 
 <img width="1217" alt="image" src="https://github.com/carolynz/poetry-camera-rpi/assets/1395087/dca36686-fcfa-43ba-86f6-155bd1aab0e5">
 
-## Part 7: Change wifi networks on-the-go
+## Part 8: Change wifi networks on-the-go
 The camera needs wifi to work. You could always hardcode in your mobile hotspot by editing `wpa_supplicant.conf`. If you want to connect to new wifi networks on the fly, just follow [this simple tutorial](https://www.raspberrypi.com/tutorials/host-a-hotel-wifi-hotspot/) with plug-and-play code. (You can auto-run the tutorial's Flask app and our main camera code as two cron jobs at the same time.)
 
 To do the above tutorial, you'll need a second wifi adapter, plugged into your microUSB port. Definitely get a plug-and-play wifi adapter that works for Linux/Raspberry Pi.
