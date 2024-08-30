@@ -34,16 +34,21 @@ openai_client = openai.OpenAI(api_key=openai_api_key)
 baud_rate = 9600 # REPLACE WITH YOUR OWN BAUD RATE
 printer = Adafruit_Thermal('/dev/serial0', baud_rate, timeout=5)
 
+
+
+#instantiate buttons
+shutter_button = Button(16) # REPLACE WTH YOUR OWN BUTTON PINS
+power_button = Button(26, hold_time = 2) #REPLACE WITH YOUR OWN BUTTON PINS
+led = LED(20)
+onled = LED(21)
+
 #instantiate camera
 picam2 = Picamera2()
 # start camera
 picam2.start()
 time.sleep(5) # warmup period since first few frames are often poor quality
 
-#instantiate buttons
-shutter_button = Button(16) # REPLACE WTH YOUR OWN BUTTON PINS
-power_button = Button(26, hold_time = 2) #REPLACE WITH YOUR OWN BUTTON PINS
-led = LED(20)
+onled.on()
 
 # prompts
 system_prompt = """You are a poet. You specialize in elegant and emotionally impactful poems. 
@@ -207,6 +212,7 @@ def shutdown():
   print('shutdown button held for 2s')
   print('shutting down now')
   led.off()
+  onled.off()
   os.system('sudo shutdown -h now')
 
 ################################
