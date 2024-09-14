@@ -50,6 +50,8 @@ time.sleep(5) # warmup period since first few frames are often poor quality
 
 onled.on()
 
+home_directory = os.path.expanduser('~') + "/poetry-camera/"
+
 # prompts
 system_prompt = """You are a poet. You specialize in elegant and emotionally impactful poems. 
 You are careful to use subtlety and write in a modern vernacular style. 
@@ -198,10 +200,8 @@ def print_footer():
   printer.println("   .     .     .     .     .   ")
   printer.println("_.` `._.` `._.` `._.` `._.` `._")
   printer.println('\n')
-  printer.println(' This poem was written by AI.')
+  printer.println(' This poem was written by Richard Errico and Julia Piascik.')
   printer.println()
-  printer.println('Explore the archives at')
-  printer.println('poetry.camera')
   printer.println('\n\n\n\n')
 
 
@@ -241,6 +241,7 @@ def handle_pressed():
 
 def handle_held():
   print("button held!")
+  onled.off()
   shutdown()
 
 
