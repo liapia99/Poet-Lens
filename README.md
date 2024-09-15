@@ -5,7 +5,7 @@ Forked from the [poetry camera ](https://poetry.camera/)by Ryan Mather and Kelin
 
 I worked with Richard Errico, a high-school teacher interested in photography and electronics. He thought this was a very cool project, so he wanted to make his own. 
 
-We followed the same instructions that are in the original poetry camera github but we added the steps we did. 
+We followed the same instructions that are in the original poetry camera github but we added the steps we did. Here is the 3D print we used: https://www.thingiverse.com/thing:6501240
 
 ## Software Steps
 
