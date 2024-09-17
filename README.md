@@ -17,7 +17,7 @@ We followed the same instructions that are in the original poetry camera github 
 raspistill -o testshot.jpg
 ```
 
-3. Insert your SD card with a fresh install of any Raspberry Pi OS onto the Pi. You can follow steps here to do that: https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/2. 
+3. Insert your SD card with a fresh install of any Raspberry Pi OS onto the Pi. We did Legacy for 32-bit. You can follow steps here to do that: https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/2. 
 
 4. Connect your Pi to a monitor via mini HDMI.
 
@@ -92,6 +92,7 @@ $ cd Poet-Lens
 # instantiate printer
 printer = Adafruit_Thermal('/dev/serial0', 9600, timeout=2)
 ```
+7. *If* you want a different prompt for your camera you can copy and paste one of the options from 'prompts.md'. 
 
 ### Part 4. Set up the AI
 1. Set up an OpenAI account and a Replicate account, as you will need to create two API keys. When we went through the original steps, we kept getting and Error Code : 404 : 'The model 'gpt-4' does not exist or you do not have access to it.' So this is how we solved our problem: 
