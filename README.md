@@ -183,10 +183,12 @@ A common problem that we had was that camera was failing. For that, we just rebo
 ## Part 8: Change wifi networks on-the-go
 The camera needs wifi to work. You could always hardcode in your mobile hotspot by editing `wpa_supplicant.conf`. If you want to connect to new wifi networks on the fly, just follow [this simple tutorial](https://www.raspberrypi.com/tutorials/host-a-hotel-wifi-hotspot/) with plug-and-play code. (You can auto-run the tutorial's Flask app and our main camera code as two cron jobs at the same time.)
 
+- systemctl status NetworkManager
+
+- 
 To do the above tutorial, you'll need a second wifi adapter, plugged into your microUSB port. Definitely get a plug-and-play wifi adapter that works for Linux/Raspberry Pi.
 
-Wifi adapter options that seem to work:
-- [From Pi Hut (UK)](https://thepihut.com/products/usb-wifi-adapter-for-the-raspberry-pi)
+Wifi adapter options that work:
 - [LOTEKOO, from Amazon](https://www.amazon.com/dp/B06Y2HKT75)
 - [Canakit, from Amazon](https://www.amazon.com/dp/B00GFAN498)
 
