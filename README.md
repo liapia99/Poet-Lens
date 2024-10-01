@@ -171,7 +171,10 @@ sudo reboot
 ```
 Now reboot your camera. Once the green built-in LED on the Pi turns solid then you can press the shutter button.
 
-A common problem that we had was that camera was failing. For that, we just rebooted the camera by unplugging and plugging back in the batteries. 
+A common problem that we had was that camera was failing. For that, we just rebooted the camera by unplugging and plugging back in the batteries. You can also try:
+
+lsof /dev/video0
+kill PID
 
 ## Part 7. Make the power circuit
 
