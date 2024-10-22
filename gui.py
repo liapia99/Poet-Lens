@@ -8,76 +8,47 @@ import time
 import wifi
 import os
 
-class PiGUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Raspberry Pi GUI")
+class WiFiCameraApp:
+    def __init__(self, master):
+        self.master = master
+        master.title("WiFi Camera App")
 
-        # Progress bar setup
-        self.progress = ttk.Progressbar(root, orient='horizontal', length=400, mode='determinate')
-        self.progress.pack(pady=20)
+        self.progress_label = tk.Label(master, text="Loading...")
+        self.progress_label.pack()
 
-        # Label for camera feed
-        self.label = tk.Label(root)
-        self.label.pack(pady=20)
+        self.progress = ttk.Progressbar(master, mode='indeterminate')
+        self.progress.pack(fill=tk.X, padx=10, pady=10)
+        self.progress.start()
 
-        # Frame for network buttons
-        self.network_frame = tk.Frame(root)
-        self.network_frame.pack(pady=20)
-
-        # Known networks and passwords (modify this dictionary to fit your known networks)
-        self.known_networks = {
-            "MyHomeWiFi": "password123",
-            "WorkWiFi": "workpassword456",
-            "GuestWiFi": "guestpass789"
+        # Define your networks and their passwords
+        self.networks = {
+            "YourNetworkSSID1": "YourPassword1",
+            "YourNetworkSSID2": "YourPassword2",
+            "YourNetworkSSID3": "YourPassword3"
         }
 
-        # Start loading and scanning in a separate thread to avoid freezing GUI
-        self.progress_thread = threading.Thread(target=self.load_and_scan)
-        self.progress_thread.start()
+        # Create buttons for predefined networks
+        self.create_network_buttons()
 
-    def load_and_scan(self):
-        # Simulate a loading process with a progress bar
-        for i in range(101):
-            self.progress['value'] = i
-            time.sleep(0.03)  # Simulate loading time
-            self.root.update_idletasks()
+        self.video_frame = tk.Frame(master)
+        self.video_frame.pack()
 
-        # Scan for Wi-Fi networks
-        networks = self.scan_networks()
-        print("Available Networks: ", networks)
+        self.picam2 = Picamera2()
+        self.stream_thread = threading.Thread(target=self.start_stream)
+        self.stream_thread.start()
 
-        # Create buttons for each scanned network
-        for network in networks:
-            button = tk.Button(self.network_frame, text=network, command=lambda net=network: self.connect_to_network(net))
+    def create_network_buttons(self):
+        for ssid, password in self.networks.items():
+            button = tk.Button(self.master, text=ssid, command=lambda s=ssid, p=password: self.connect_to_wifi(s, p))
             button.pack(pady=5)
 
-        # Start the camera feed after loading completes
-        self.start_camera()
+        self.progress.stop()
+        self.progress_label.config(text="Select a network to connect.")
 
-    def scan_networks(self):
-        # Scan for available Wi-Fi networks (using wifi library)
-        networks = wifi.Cell.all('wlan0')
-        network_names = [cell.ssid for cell in networks]
-        return network_names
-
-    def connect_to_network(self, ssid):
-        # Check if network has a predefined password
-        if ssid in self.known_networks:
-            password = self.known_networks[ssid]
-            print(f"Attempting to connect to {ssid} with password {password}...")
-            connect_command = f'nmcli dev wifi connect "{ssid}" password "{password}"'
-        else:
-            print(f"Attempting to connect to {ssid} (no saved password)...")
-            connect_command = f'nmcli dev wifi connect "{ssid}"'
-
-        # Execute the command to connect
-        result = os.system(connect_command)
-
-        if result == 0:
-            print(f"Successfully connected to {ssid}")
-        else:
-            print(f"Failed to connect to {ssid}")
+    def connect_to_wifi(self, ssid, password):
+        connect_command = f"nmcli dev wifi connect '{ssid}' password '{password}'"
+        os.system(connect_command)
+        messagebox.showinfo("Connection", f"Connecting to {ssid}...")
 
     def start_camera(self):
         # Initialize picamera2 after progress bar completes
