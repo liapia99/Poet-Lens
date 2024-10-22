@@ -1,12 +1,9 @@
 from picamera2 import Picamera2
 import cv2
-from PIL import Image, ImageTk
 import tkinter as tk
-from tkinter import ttk
-import threading
-import time
-import wifi
+from tkinter import ttk, messagebox
 import os
+import threading
 
 class WiFiCameraApp:
     def __init__(self, master):
@@ -50,39 +47,18 @@ class WiFiCameraApp:
         os.system(connect_command)
         messagebox.showinfo("Connection", f"Connecting to {ssid}...")
 
-    def start_camera(self):
-        # Initialize picamera2 after progress bar completes
-        self.picam2 = Picamera2()
-        self.picam2.configure(self.picam2.create_preview_configuration())
+    def start_stream(self):
         self.picam2.start()
+        while True:
+            frame = self.picam2.capture_array()
+            if frame is not None:
+                cv2.imshow("Live Stream", frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+        self.picam2.stop()
+        cv2.destroyAllWindows()
 
-        # Start updating camera feed
-        self.update_camera()
-
-    def update_camera(self):
-        # Capture frame-by-frame from the camera
-        frame = self.picam2.capture_array()
-
-        # Convert the frame to ImageTk format for Tkinter
-        cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(cv2image)
-        imgtk = ImageTk.PhotoImage(image=img)
-
-        # Update the label with the new image
-        self.label.imgtk = imgtk
-        self.label.configure(image=imgtk)
-
-        # Update the camera feed every 10 ms
-        self.label.after(10, self.update_camera)
-
-    def on_close(self):
-        if hasattr(self, 'picam2'):
-            self.picam2.close()
-        self.root.destroy()
-
-# Main function
 if __name__ == "__main__":
     root = tk.Tk()
-    app = PiGUI(root)
-    root.protocol("WM_DELETE_WINDOW", app.on_close)
+    app = WiFiCameraApp(root)
     root.mainloop()
