@@ -1,3 +1,13 @@
+sudo apt install -y python3-picamera2
+sudo apt install -y python3-tk
+sudo apt install -y python3-gpiozero
+pip install python-dotenv
+pip install openai
+pip install replicate
+pip install numpy
+pip install opencv-python
+pip install requests
+
 from picamera2 import Picamera2, Preview
 import tkinter as tk
 from tkinter import ttk, messagebox
