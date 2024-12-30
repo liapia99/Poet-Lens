@@ -37,8 +37,11 @@ def button_action(button_idx):
 
 # Create a list of buttons
 buttons = []
+default_bg_color = "lightgray"  # Default background color for the buttons
+highlight_bg_color = "lightblue"  # Color when a button is selected
+
 for i in range(num_buttons):
-    btn = tk.Button(root, text=button_names[i], width=20, command=lambda idx=i: button_action(idx))
+    btn = tk.Button(root, text=button_names[i], width=20, bg=default_bg_color, command=lambda idx=i: button_action(idx))
     btn.grid(row=0, column=i)
     buttons.append(btn)
 
@@ -69,10 +72,10 @@ def update_selected_button():
 
     # Remove highlight from all buttons
     for button in buttons:
-        button.config(bg="SystemButtonFace")  # Default background color
+        button.config(bg=default_bg_color)  # Default background color
 
     # Highlight the selected button
-    buttons[encoderPos].config(bg="lightblue")  # Highlight color
+    buttons[encoderPos].config(bg=highlight_bg_color)  # Highlight color
 
 # Main program loop
 try:
