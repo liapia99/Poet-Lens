@@ -8,7 +8,7 @@ import spidev
 # Setup GPIO for rotary encoder
 pinCLK = 17
 pinDT = 18
-pinSW = 1
+pinSW = 27
 
 # Initialize the TFT display
 spi = spidev.SpiDev()
