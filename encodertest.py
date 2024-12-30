@@ -5,17 +5,19 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 # Define the GPIO pins connected to the rotary encoder
-clk_pin = 17  # Clock Pin
-dt_pin = 18   # Data Pin
+clk_pin = 17  # Clock Pin (rotation)
+dt_pin = 18   # Data Pin (rotation)
+btn_pin = 27  # Button Pin (press action)
 
 # Set up the pins as input with pull-up resistors
 GPIO.setup(clk_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(dt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(btn_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button press
 
 # Initialize last known state
 last_state = GPIO.input(clk_pin)
 
-# List of messages to print when the encoder is turned
+# List of messages to print when the encoder is turned or pressed
 messages = [
     "Message 1: Rotary Encoder turned!",
     "Message 2: Keep turning!",
@@ -25,6 +27,7 @@ messages = [
 ]
 msg_index = 0
 
+# Callback for rotation detection
 def encoder_callback(channel):
     global last_state, msg_index
     
@@ -45,11 +48,16 @@ def encoder_callback(channel):
         
     last_state = current_state
 
-# Set up the event detection for the clock pin
+# Callback for button press detection
+def button_callback(channel):
+    print("Button pressed!")
+
+# Set up the event detection for the clock pin (rotation) and button pin (press)
 GPIO.add_event_detect(clk_pin, GPIO.BOTH, callback=encoder_callback, bouncetime=200)
+GPIO.add_event_detect(btn_pin, GPIO.FALLING, callback=button_callback, bouncetime=300)
 
 try:
-    print("Rotary Encoder is ready. Start turning!")
+    print("Rotary Encoder is ready. Start turning or press the button!")
     while True:
         time.sleep(0.1)  # Main loop does nothing but waits for events
 except KeyboardInterrupt:
