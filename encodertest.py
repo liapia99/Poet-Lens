@@ -1,72 +1,69 @@
 import RPi.GPIO as GPIO
 import time
 
+# Define the GPIO pins connected to the rotary encoder
+pinCLK = 17  # Connected to CLK on the rotary encoder (adjust pin number as needed)
+pinDT = 18   # Connected to DT on the rotary encoder
+pinSW = 1   # Connected to SW on the rotary encoder
+
+# Variables to hold the current and last encoder position
+encoderPos = 0
+lastEncoderPos = 0
+
+# Variables to keep track of the state of the pins
+lastCLK = 0
+currentCLK = 0
+
 # Set up the GPIO mode
 GPIO.setmode(GPIO.BCM)
 
-# Define the GPIO pins connected to the rotary encoder
-clk_pin = 17  # Clock Pin (rotation)
-dt_pin = 18   # Data Pin (rotation)
-btn_pin = 27  # Button Pin (press action)
-
 # Set up the pins as input with pull-up resistors
-GPIO.setup(clk_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(dt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(btn_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button press
+GPIO.setup(pinCLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(pinDT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(pinSW, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button press
 
-# Initialize last known state and rotation counter
-last_state = GPIO.input(clk_pin)
-counter = 0  # Track number of pulses
-
-# Define a number of steps per full revolution (e.g., 360 steps for 360 degrees)
-steps_per_revolution = 360
-
-# List of messages for specific spots on the unit circle (e.g., angles)
-messages = {
-    0: "You are at 0° - Starting Point!",
-    90: "You are at 90° - Right Angle!",
-    180: "You are at 180° - Halfway there!",
-    270: "You are at 270° - Three-quarters!",
-}
-
-# Map the counter to the angle on the unit circle
-def get_angle(counter, steps_per_revolution):
-    angle = (counter % steps_per_revolution) * (360 / steps_per_revolution)
-    return angle
-
-# Callback for rotation detection
-def encoder_callback(channel):
-    global last_state, counter
+# Function to read the encoder
+def read_encoder():
+    global encoderPos, lastCLK
+    currentCLK = GPIO.input(pinCLK)
     
-    # Read the current state of the encoder's clock pin
-    current_state = GPIO.input(clk_pin)
-
-    # If the current state is different from the last state, rotation occurred
-    if current_state != last_state:
-        if GPIO.input(dt_pin) != current_state:
-            # Turning in one direction (clockwise)
-            counter += 1
+    # If the current state of CLK is different from the last state, a pulse occurred
+    if currentCLK != lastCLK:
+        # If the DT state is different from the CLK state, it's clockwise
+        if GPIO.input(pinDT) != currentCLK:
+            encoderPos += 1
         else:
-            # Turning in the other direction (counterclockwise)
-            counter -= 1
-        
-        # Map counter to an angle on the unit circle
-        angle = get_angle(counter, steps_per_revolution)
-        
-        # Check if the angle matches any of our specific spots
-        for key_angle in messages.keys():
-            if int(angle) == key_angle:
-                print(messages[key_angle])
+            # Otherwise, it's counterclockwise
+            encoderPos -= 1
+    lastCLK = currentCLK
 
-    last_state = current_state
-
-# Set up the event detection for the clock pin (rotation)
-GPIO.add_event_detect(clk_pin, GPIO.BOTH, callback=encoder_callback, bouncetime=200)
-
+# Main program loop
 try:
-    print("Rotary Encoder is ready. Start turning!")
+    # Initialize the serial communication (print to console in Python)
+    print("Rotary Encoder Initialized")
+    
+    # Initialize lastCLK to the current state of CLK
+    lastCLK = GPIO.input(pinCLK)
+    
     while True:
-        time.sleep(0.1)  # Main loop does nothing but waits for events
+        # Check if the encoder has moved
+        read_encoder()
+        if encoderPos != lastEncoderPos:
+            print(f"Position: {encoderPos}")
+            lastEncoderPos = encoderPos
+        
+        # Check if the button is pressed
+        if GPIO.input(pinSW) == GPIO.LOW:
+            # Reset the encoder position to 0
+            encoderPos = 0
+            print("Reset to 0")
+            # Wait for the button to be released
+            while GPIO.input(pinSW) == GPIO.LOW:
+                time.sleep(0.01)
+        
+        # Small delay to debounce the reading
+        time.sleep(0.01)
+
 except KeyboardInterrupt:
     print("Exiting program...")
 finally:
