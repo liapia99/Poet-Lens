@@ -2,9 +2,9 @@ import RPi.GPIO as GPIO
 import time
 
 # Define the GPIO pins connected to the rotary encoder
-pinCLK = 17  # Connected to CLK on the rotary encoder (adjust pin number as needed)
+pinCLK = 17  # Connected to CLK on the rotary encoder
 pinDT = 18   # Connected to DT on the rotary encoder
-pinSW = 1   # Connected to SW on the rotary encoder
+pinSW = 27   # Connected to SW on the rotary encoder
 
 # Variables to hold the current and last encoder position
 encoderPos = 0
@@ -21,6 +21,16 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(pinCLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pinDT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pinSW, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button press
+
+# Messages for specific positions
+messages = {
+    0: "Position 0: Starting Point",
+    5: "Position 5: Five Steps!",
+    10: "Position 10: Ten Steps!",
+    15: "Position 15: Halfway there!",
+    20: "Position 20: Almost Done!",
+    25: "Position 25: Almost at the end!"
+}
 
 # Function to read the encoder
 def read_encoder():
@@ -48,15 +58,24 @@ try:
     while True:
         # Check if the encoder has moved
         read_encoder()
+
+        # Ensure the position stays within 0 to 29
+        if encoderPos < 0:
+            encoderPos = 29  # Wrap around to 29
+        elif encoderPos > 29:
+            encoderPos = 0  # Wrap around to 0
+
+        # Check if the encoder position has changed and print a message if it's one of the key positions
         if encoderPos != lastEncoderPos:
-            print(f"Position: {encoderPos}")
+            if encoderPos in messages:
+                print(messages[encoderPos])
             lastEncoderPos = encoderPos
         
-        # Check if the button is pressed
+        # Check if the button is pressed (confirm selection)
         if GPIO.input(pinSW) == GPIO.LOW:
-            # Reset the encoder position to 0
-            encoderPos = 0
-            print("Reset to 0")
+            # Print a confirmation message for the selected position
+            if encoderPos in messages:
+                print(f"Selected Position: {encoderPos}")
             # Wait for the button to be released
             while GPIO.input(pinSW) == GPIO.LOW:
                 time.sleep(0.01)
