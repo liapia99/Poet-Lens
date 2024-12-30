@@ -44,7 +44,7 @@ for i in range(num_buttons):
 
 # Function to read the encoder and update the selected button
 def read_encoder():
-    global encoderPos, lastCLK
+    global encoderPos, lastCLK  # Make sure to reference the global variable
     currentCLK = GPIO.input(pinCLK)
     
     # If the current state of CLK is different from the last state, a pulse occurred
@@ -59,6 +59,8 @@ def read_encoder():
 
 # Highlight the selected button based on encoder position
 def update_selected_button():
+    global encoderPos  # Make sure to reference the global variable
+
     # Ensure the position stays within the range of buttons
     if encoderPos < 0:
         encoderPos = num_buttons - 1  # Wrap around to the last button
@@ -89,7 +91,7 @@ try:
         if GPIO.input(pinSW) == GPIO.LOW:
             # Perform the action for the selected button
             button_action(encoderPos)
-            # Wait for the button to be released
+            # Wait for the button to be released (debounce)
             while GPIO.input(pinSW) == GPIO.LOW:
                 time.sleep(0.01)
 
