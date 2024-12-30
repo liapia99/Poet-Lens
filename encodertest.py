@@ -14,22 +14,29 @@ GPIO.setup(clk_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(dt_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(btn_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Button press
 
-# Initialize last known state
+# Initialize last known state and rotation counter
 last_state = GPIO.input(clk_pin)
+counter = 0  # Track number of pulses
 
-# List of messages to print when the encoder is turned or pressed
-messages = [
-    "Message 1: Rotary Encoder turned!",
-    "Message 2: Keep turning!",
-    "Message 3: Good job!",
-    "Message 4: You're on the move!",
-    "Message 5: Keep it up!"
-]
-msg_index = 0
+# Define a number of steps per full revolution (e.g., 360 steps for 360 degrees)
+steps_per_revolution = 360
+
+# List of messages for specific spots on the unit circle (e.g., angles)
+messages = {
+    0: "You are at 0° - Starting Point!",
+    90: "You are at 90° - Right Angle!",
+    180: "You are at 180° - Halfway there!",
+    270: "You are at 270° - Three-quarters!",
+}
+
+# Map the counter to the angle on the unit circle
+def get_angle(counter, steps_per_revolution):
+    angle = (counter % steps_per_revolution) * (360 / steps_per_revolution)
+    return angle
 
 # Callback for rotation detection
 def encoder_callback(channel):
-    global last_state, msg_index
+    global last_state, counter
     
     # Read the current state of the encoder's clock pin
     current_state = GPIO.input(clk_pin)
@@ -38,26 +45,26 @@ def encoder_callback(channel):
     if current_state != last_state:
         if GPIO.input(dt_pin) != current_state:
             # Turning in one direction (clockwise)
-            print(messages[msg_index % len(messages)])
+            counter += 1
         else:
             # Turning in the other direction (counterclockwise)
-            print(messages[msg_index % len(messages)])
-
-        # Update message index after each turn
-        msg_index += 1
+            counter -= 1
         
+        # Map counter to an angle on the unit circle
+        angle = get_angle(counter, steps_per_revolution)
+        
+        # Check if the angle matches any of our specific spots
+        for key_angle in messages.keys():
+            if int(angle) == key_angle:
+                print(messages[key_angle])
+
     last_state = current_state
 
-# Callback for button press detection
-def button_callback(channel):
-    print("Button pressed!")
-
-# Set up the event detection for the clock pin (rotation) and button pin (press)
+# Set up the event detection for the clock pin (rotation)
 GPIO.add_event_detect(clk_pin, GPIO.BOTH, callback=encoder_callback, bouncetime=200)
-GPIO.add_event_detect(btn_pin, GPIO.FALLING, callback=button_callback, bouncetime=300)
 
 try:
-    print("Rotary Encoder is ready. Start turning or press the button!")
+    print("Rotary Encoder is ready. Start turning!")
     while True:
         time.sleep(0.1)  # Main loop does nothing but waits for events
 except KeyboardInterrupt:
