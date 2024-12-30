@@ -1,24 +1,16 @@
+from luma.core.interface.serial import spi
+from luma.lcd.device import st7735
 from PIL import Image, ImageDraw, ImageFont
-import ST7735
 
 # Initialize the TFT display
-disp = ST7735.ST7735(
-    port=0,          # SPI port
-    cs=0,            # Chip-select pin
-    dc=24,           # Data/Command pin
-    backlight=18,    # Backlight pin
-    spi_speed_hz=4000000,
-    rst=25,          # Reset pin
-    width=128,       # Width of the display
-    height=160       # Height of the display
-)
-disp.begin()
+serial = spi(port=0, device=0, gpio_DC=24, gpio_RST=25, gpio_BACKLIGHT=18)
+device = st7735(serial, width=128, height=160)
 
 # Create a blank image for the display
 image = Image.new("RGB", (128, 160), "black")  # Black background
 draw = ImageDraw.Draw(image)
 
-# Load a font (use a default PIL font)
+# Load a font (use a default PIL font or custom font)
 font = ImageFont.load_default()
 
 # Define text and color
@@ -34,4 +26,4 @@ y = (160 - text_height) // 2  # Center vertically
 draw.text((x, y), text, fill=text_color, font=font)
 
 # Display the image on the TFT
-disp.display(image)
+device.display(image)
